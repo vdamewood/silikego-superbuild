@@ -60,7 +60,8 @@ target_link_libraries(SilikegujoForMacOS
 		"-framework Cocoa"
 )
 
-if(SILIKEGO_BUILD_SHARED_LIBRARY)
+get_target_property(SILIKEGO_TYPE Silikego::Silikego TYPE)
+if (${SILIKEGO_TYPE} STREQUAL SHARED_LIBRARY)
 	set_target_properties(SilikegujoForMacOS PROPERTIES
 		BUILD_WITH_INSTALL_RPATH        On
 		INSTALL_RPATH                   "@executable_path/../Frameworks"
