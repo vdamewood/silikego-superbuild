@@ -20,7 +20,7 @@
 #include <cstring>
 #include <memory>
 
-#include <Silikego/Lexer.h>
+#include <SilikegoCore/Lexer.h>
 
 /* Values taken from Google Calculator 2011-07-06 */
 #define EULER 2.71828183

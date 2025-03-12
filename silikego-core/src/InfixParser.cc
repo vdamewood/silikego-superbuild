@@ -15,9 +15,9 @@
  * along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <Silikego/Lexer.h>
-#include <Silikego/InfixParser.h>
-#include <Silikego/Value.h>
+#include <SilikegoCore/Lexer.h>
+#include <SilikegoCore/InfixParser.h>
+#include <SilikegoCore/Value.h>
 
 namespace Silikego
 {

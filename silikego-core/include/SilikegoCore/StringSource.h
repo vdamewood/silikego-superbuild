@@ -20,12 +20,12 @@
 
 #include <string>
 
-#include <Silikego/Api.h>
-#include <Silikego/DataSource.h>
+#include <SilikegoCore/Api.h>
+#include <SilikegoCore/DataSource.h>
 
 namespace Silikego
 {
-	class SILIKEGO_EXPORT StringSource : public DataSource
+	class SILIKEGOCORE_EXPORT StringSource : public DataSource
 	{
 	public:
 		StringSource(const char *);

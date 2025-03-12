@@ -20,13 +20,13 @@
 
 #include <memory>
 
-#include <Silikego/Api.h>
-#include <Silikego/DataSource.h>
-#include <Silikego/Token.h>
+#include <SilikegoCore/Api.h>
+#include <SilikegoCore/DataSource.h>
+#include <SilikegoCore/Token.h>
 
 namespace Silikego
 {
-	class SILIKEGO_EXPORT Lexer
+	class SILIKEGOCORE_EXPORT Lexer
 	{
 	public:
 		Lexer(std::unique_ptr<DataSource> InputSource);

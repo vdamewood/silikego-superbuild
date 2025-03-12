@@ -5,9 +5,9 @@
 // so that this file resolves as Silikego/Api.h to eliminate errors from
 // missing the header file Silikego/Api.h.
 
-#define SILIKEGO_EXPORT
-#define SILIKEGO_NO_EXPORT
-#define SILIKEGO_DEPRECATED
-#define SILIKEGO_DEPRECATED_EXPORT
-#define SILIKEGO_DEPRECATED_NO_EXPORT
-#define SILIKOEG_NO_DEPRECATED
+#define SILIKEGOCORE_EXPORT
+#define SILIKEGOCORE_NO_EXPORT
+#define SILIKEGOCORE_DEPRECATED
+#define SILIKEGOCORE_DEPRECATED_EXPORT
+#define SILIKEGOCORE_DEPRECATED_NO_EXPORT
+#define SILIKOEGCORE_NO_DEPRECATED

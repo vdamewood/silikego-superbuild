@@ -17,7 +17,7 @@
 
 #include <cstring>
 
-#include <Silikego/Token.h>
+#include <SilikegoCore/Token.h>
 
 namespace Silikego
 {

@@ -20,7 +20,7 @@
 
 #include <string>
 
-#include <Silikego/Api.h>
+#include <SilikegoCore/Api.h>
 
 namespace Silikego
 {
@@ -45,7 +45,7 @@ namespace Silikego
 		                    range error. */
 	};
 
-	class SILIKEGO_EXPORT Value
+	class SILIKEGOCORE_EXPORT Value
 	{
 	public:
 

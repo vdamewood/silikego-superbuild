@@ -21,8 +21,8 @@
 #include <string>
 #include <vector>
 
-#include <Silikego/Api.h>
-#include <Silikego/Value.h>
+#include <SilikegoCore/Api.h>
+#include <SilikegoCore/Value.h>
 
 
 namespace Silikego
@@ -31,10 +31,10 @@ namespace Silikego
 	{
 		typedef Value (*FunctionPointer)(std::vector<Value>);
 
-		SILIKEGO_EXPORT bool SetUp();
-		SILIKEGO_EXPORT void TearDown();
-		SILIKEGO_EXPORT Value Call(const std::string &Name, std::vector<Value> Args);
-		SILIKEGO_EXPORT void Install(const std::string &Name, FunctionPointer Function);
+		SILIKEGOCORE_EXPORT bool SetUp();
+		SILIKEGOCORE_EXPORT void TearDown();
+		SILIKEGOCORE_EXPORT Value Call(const std::string &Name, std::vector<Value> Args);
+		SILIKEGOCORE_EXPORT void Install(const std::string &Name, FunctionPointer Function);
 	};
 };
 #endif // SILIKEGO_FUNCTION_CALLER_H

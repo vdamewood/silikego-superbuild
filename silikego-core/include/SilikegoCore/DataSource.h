@@ -18,11 +18,11 @@
 #if !defined SILIKEGO_DATA_SOURCE_H
 #define SILIKEGO_DATA_SOURCE_H
 
-#include <Silikego/Api.h>
+#include <SilikegoCore/Api.h>
 
 namespace Silikego
 {
-	class SILIKEGO_EXPORT DataSource
+	class SILIKEGOCORE_EXPORT DataSource
 	{
 	public:
 		virtual ~DataSource();

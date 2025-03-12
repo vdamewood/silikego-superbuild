@@ -20,13 +20,13 @@
 
 #include <memory>
 
-#include <Silikego/Api.h>
-#include <Silikego/DataSource.h>
-#include <Silikego/SyntaxTree.h>
+#include <SilikegoCore/Api.h>
+#include <SilikegoCore/DataSource.h>
+#include <SilikegoCore/SyntaxTree.h>
 
 namespace Silikego
 {
-	SILIKEGO_EXPORT std::unique_ptr<SyntaxTreeNode> ParseInfix(std::unique_ptr<DataSource> Input);
+	SILIKEGOCORE_EXPORT std::unique_ptr<SyntaxTreeNode> ParseInfix(std::unique_ptr<DataSource> Input);
 };
 
 #endif // SILIKEGO_INFIX_PARSER_H

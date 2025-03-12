@@ -20,7 +20,7 @@
 
 #include <vector>
 
-#include <Silikego/Value.h>
+#include <SilikegoCore/Value.h>
 
 namespace Silikego
 {

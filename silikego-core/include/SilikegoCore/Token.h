@@ -20,11 +20,11 @@
 
 #include <string>
 
-#include <Silikego/Api.h>
+#include <SilikegoCore/Api.h>
 
 namespace Silikego
 {
-	class SILIKEGO_EXPORT Token
+	class SILIKEGOCORE_EXPORT Token
 	{
 	public:
 		enum TokenType
