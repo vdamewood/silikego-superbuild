@@ -35,7 +35,7 @@ add_executable(Silikegilo)
 target_sources(Silikegilo
 	PRIVATE
 		src/StringSource.h
-		src/main.cc
+		src/Main.cc
 		src/StringSource.cc
 
 )
