@@ -14,30 +14,47 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+cmake_minimum_required(VERSION 3.18)
+
+project(SilikegujoForWindows
+	VERSION       0.0.0
+	DESCRIPTION   "GUI frontend for Silikego for Windows"
+	HOMEPAGE_URL  "https://vdamewood.com/software/projects/silikego"
+	LANGUAGES     CXX
+)
+set(PRERELEASE_SUFFIX "indev")
+
+include(GNUInstallDirs)
+
+if(NOT TARGET Silikego::SilikegoCore)
+	find_package(SilikegoCore REQUIRED)
+endif()
+
 add_executable(SilikegujoForWindows WIN32)
 target_sources(SilikegujoForWindows
 	PRIVATE
-		EvalWindow.h
-		About.h
-		Id.h
-		WinMain.cc
-		EvalWindow.cc
-		EvalWindow.rc
-		About.cc
-		About.rc
-		Icon.rc
+		src/EvalWindow.h
+		src/About.h
+		src/Id.h
+		src/WinMain.cc
+		src/EvalWindow.cc
+		src/EvalWindow.rc
+		src/About.cc
+		src/About.rc
+		src/Icon.rc
 )
 set_target_properties(SilikegujoForWindows PROPERTIES
 	OUTPUT_NAME               Silikegujo
-	RUNTIME_OUTPUT_DIRECTORY  "${PROJECT_BINARY_DIR}/products"
-	LIBRARY_OUTPUT_DIRECTORY  "${PROJECT_BINARY_DIR}/products"
-	ARCHIVE_OUTPUT_DIRECTORY  "${PROJECT_BINARY_DIR}/products"
-	PDB_OUTPUT_DIRECTORY      "${PROJECT_BINARY_DIR}/products"
 )
+if(PRERELEASE_SUFFIX STREQUAL "")
+	set(VSV_PRERELEASE_FLAG 0)
+else()
+	set(VSV_PRERELEASE_FLAG VS_FF_PRERELEASE)
+endif()
 set(VSV_DEBUG_FLAG 0)
 set(VSV_FILENAME "Silikegujo.exe")
 configure_file(
-	Version.rc.in
+	src/Version.rc.in
 	${CMAKE_CURRENT_BINARY_DIR}/Version.Release.rc
 	@ONLY
 )
@@ -46,13 +63,13 @@ target_sources(SilikegujoForWindows PRIVATE $<$<CONFIG:Release>:${CMAKE_CURRENT_
 set(VSV_DEBUG_FLAG VS_FF_DEBUG)
 set(VSV_FILENAME "Silikegujo.exe")
 configure_file(
-	Version.rc.in
+	src/Version.rc.in
 	${CMAKE_CURRENT_BINARY_DIR}/Version.Debug.rc
 	@ONLY
 )
 target_sources(SilikegujoForWindows PRIVATE $<$<CONFIG:Debug>:${CMAKE_CURRENT_BINARY_DIR}/Version.Debug.rc>)
-target_compile_features(SilikegujoForWindows PRIVATE cxx_std_11)
-target_link_libraries(SilikegujoForWindows PRIVATE Silikego::Silikego)
+target_compile_features(SilikegujoForWindows PRIVATE cxx_std_17)
+target_link_libraries(SilikegujoForWindows PRIVATE Silikego::SilikegoCore)
 
 install(TARGETS SilikegujoForWindows
 RUNTIME

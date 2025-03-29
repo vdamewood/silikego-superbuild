@@ -23,8 +23,8 @@
 
 #include <memory>
 
-#include <Silikego/StringSource.h>
-#include <Silikego/InfixParser.h>
+#include <SilikegoCore/StringSource.h>
+#include <SilikegoCore/InfixParser.h>
 
 #include "EvalWindow.h"
 #include "About.h"
