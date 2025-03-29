@@ -17,7 +17,7 @@
 
 #include <gtkmm.h>
 
-#include <Silikego/FunctionCaller.h>
+#include <SilikegoCore/FunctionCaller.h>
 
 #include "EvalWindow.h"
 

@@ -14,8 +14,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+cmake_minimum_required(VERSION 3.18)
+
+project(SilikegujoForUnix
+	VERSION       0.0.0
+	DESCRIPTION   "GUI frontend for Silikego for Unix"
+	HOMEPAGE_URL  "https://vdamewood.com/software/projects/silikego"
+	LANGUAGES     CXX
+)
+set(PRERELEASE_SUFFIX "indev")
+
+include(GNUInstallDirs)
+
+if(NOT TARGET Silikego::SilikegoCore)
+	find_package(SilikegoCore REQUIRED)
+endif()
+
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(Gtkmm REQUIRED gtkmm-4.0 IMPORTED_TARGET)
+pkg_check_modules(Gtk REQUIRED gtkmm-4.0 IMPORTED_TARGET)
 
 find_program(GRESOURCE glib-compile-resources)
 if(NOT GRESOURCE)
@@ -28,8 +44,8 @@ add_custom_command(
 		--generate-header
 		--target=${CMAKE_CURRENT_BINARY_DIR}/gresource.h
 		gresource.xml
-	DEPENDS gresource.xml EvalWindow.ui
-	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+	DEPENDS src/gresource.xml src/EvalWindow.ui
+	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 add_custom_command(
 	OUTPUT gresource.cc
@@ -37,27 +53,23 @@ add_custom_command(
 		--generate-source
 		--target=${CMAKE_CURRENT_BINARY_DIR}/gresource.cc
 		gresource.xml
-	DEPENDS gresource.xml EvalWindow.ui
-	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+	DEPENDS src/gresource.xml src/EvalWindow.ui
+	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 add_executable(SilikegujoForUnix)
 target_sources(SilikegujoForUnix
 	PRIVATE
-		Main.cc
-		EvalWindow.cc
+		src/Main.cc
+		src/EvalWindow.cc
 		gresource.cc
-		EvalWindow.h
+		src/EvalWindow.h
 		gresource.h
 )
 set_target_properties(SilikegujoForUnix PROPERTIES
 	OUTPUT_NAME               Silikegujo
-	RUNTIME_OUTPUT_DIRECTORY  "${PROJECT_BINARY_DIR}/products"
-	LIBRARY_OUTPUT_DIRECTORY  "${PROJECT_BINARY_DIR}/products"
-	ARCHIVE_OUTPUT_DIRECTORY  "${PROJECT_BINARY_DIR}/products"
-	PDB_OUTPUT_DIRECTORY      "${PROJECT_BINARY_DIR}/products"
 )
 target_compile_features(SilikegujoForUnix PRIVATE cxx_std_17)
-target_link_libraries(SilikegujoForUnix PRIVATE Silikego::Silikego PkgConfig::Gtkmm)
+target_link_libraries(SilikegujoForUnix PRIVATE Silikego::SilikegoCore PkgConfig::Gtk)
 
 install(TARGETS SilikegujoForUnix
 RUNTIME
@@ -65,12 +77,12 @@ RUNTIME
 	COMPONENT    Silikegujo
 )
 
-install(FILES silikegujo.desktop
+install(FILES src/silikegujo.desktop
 	DESTINATION  "${CMAKE_INSTALL_DATADIR}/applications"
 	COMPONENT    Silikegujo
 )
 
-install(FILES silikego.png
+install(FILES src/silikegujo.png
 	DESTINATION  "${CMAKE_INSTALL_DATADIR}/icons/hicolor/48x48/apps"
 	COMPONENT    Silikegujo
 )
