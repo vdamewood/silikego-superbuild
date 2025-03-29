@@ -20,7 +20,7 @@
 
 #include <string>
 
-#include <Silikego/DataSource.h>
+#include <SilikegoCore/DataSource.h>
 
 class StringSource : public Silikego::DataSource
 {

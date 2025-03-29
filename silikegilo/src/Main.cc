@@ -35,8 +35,8 @@ extern "C" char *readline(const char *);
 extern "C" void add_history(char *);
 #endif /* HAVE_READLINE */
 
-#include <Silikego/FunctionCaller.h>
-#include <Silikego/InfixParser.h>
+#include <SilikegoCore/FunctionCaller.h>
+#include <SilikegoCore/InfixParser.h>
 
 #include "StringSource.h"
 
