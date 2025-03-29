@@ -18,10 +18,10 @@
 #include <memory>
 #import <Cocoa/Cocoa.h>
 
-#include <Silikego/InfixParser.h>
-#include <Silikego/SyntaxTree.h>
-#include <Silikego/FunctionCaller.h>
-#include <Silikego/StringSource.h>
+#include <SilikegoCore/InfixParser.h>
+#include <SilikegoCore/SyntaxTree.h>
+#include <SilikegoCore/FunctionCaller.h>
+#include <SilikegoCore/StringSource.h>
 
 #import "Delegate.h"
 

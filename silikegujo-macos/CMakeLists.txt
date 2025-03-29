@@ -14,97 +14,72 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+cmake_minimum_required(VERSION 3.18)
+
+project(SilikegujoForMacOS
+	VERSION       0.0.0
+	DESCRIPTION   "GUI frontend for Silikego for macOS"
+	HOMEPAGE_URL  "https://vdamewood.com/software/projects/silikego"
+	LANGUAGES     OBJCXX
+)
+set(PRERELEASE_SUFFIX "indev")
+
+include(GNUInstallDirs)
+
+set(SILIKEGUJO_BUNDLE_COPYRIGHT "Copyright 2012 - 2024 Vincent Damewood")
+set(SILIKEGUJO_INSTALL_APPDIR Applications  CACHE STRING
+	"Locaton to install application bundle"
+)
+
+if(NOT TARGET Silikego::SilikegoCore)
+	find_package(SilikegoCore REQUIRED)
+endif()
+
 find_program(IBTOOL ibtool)
 if (NOT IBTOOL)
 	message(FATAL_ERROR "Command ibtool not found. Can't build GUI. Quitting.")
 endif()
 
 add_custom_command(OUTPUT MainMenu.nib
-	COMMAND "${IBTOOL}" --compile MainMenu.nib "${CMAKE_CURRENT_SOURCE_DIR}/MainMenu.xib"
-	COMMENT "Compiling ${CMAKE_CURRENT_SOURCE_DIR}/MainMenu.xib"
+	COMMAND "${IBTOOL}" --compile MainMenu.nib "${CMAKE_CURRENT_SOURCE_DIR}/src/MainMenu.xib"
+	COMMENT "Compiling ${CMAKE_CURRENT_SOURCE_DIR}/src/MainMenu.xib"
 )
 set_source_files_properties(MainMenu.nib PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-set_source_files_properties(silikegujo.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+set_source_files_properties(src/silikegujo.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
 add_executable(SilikegujoForMacOS MACOSX_BUNDLE)
 target_sources(SilikegujoForMacOS
 	PRIVATE
-		Delegate.h
-		Delegate.mm
-		Main.mm
+		src/Delegate.h
+		src/Delegate.mm
+		src/Main.mm
 		MainMenu.nib
-		silikegujo.icns
+		src/silikegujo.icns
 )
 set_target_properties(SilikegujoForMacOS PROPERTIES
-	OUTPUT_NAME                         Silikegujo
+	OUTPUT_NAME                         Silikujo
 	MACOSX_BUNDLE_GUI_IDENTIFIER        "com.vdamewood.SilikegujoForMacOS"
 	MACOSX_BUNDLE_BUNDLE_NAME           "Silikegujo"
 	MACOSX_BUNDLE_SHORT_VERSION_STRING  ${PROJECT_VERSION}
 	MACOSX_BUNDLE_BUNDLE_VERSION        ${PROJECT_VERSION}
-	MACOSX_BUNDLE_COPYRIGHT             "${SILIKEGO_COPYRIGHT}"
+	MACOSX_BUNDLE_COPYRIGHT             "${SILIKEGUJO_BUNDLE_COPYRIGHT}"
 	MACOSX_BUNDLE_ICON_FILE             silikegujo.icns
-	MACOSX_BUNDLE_INFO_PLIST            "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in"
-	RUNTIME_OUTPUT_DIRECTORY            "${PROJECT_BINARY_DIR}/products"
-	LIBRARY_OUTPUT_DIRECTORY            "${PROJECT_BINARY_DIR}/products"
-	ARCHIVE_OUTPUT_DIRECTORY            "${PROJECT_BINARY_DIR}/products"
-	PDB_OUTPUT_DIRECTORY                "${PROJECT_BINARY_DIR}/products"
+	MACOSX_BUNDLE_INFO_PLIST            "${CMAKE_CURRENT_SOURCE_DIR}/src/Info.plist.in"
 )
 target_compile_options(SilikegujoForMacOS
 	PRIVATE
 		"-fobjc-arc"
 )
-target_compile_features(SilikegujoForMacOS PRIVATE cxx_std_11)
+target_compile_features(SilikegujoForMacOS PRIVATE cxx_std_17)
 target_link_libraries(SilikegujoForMacOS
 	PRIVATE
-		Silikego::Silikego
+		Silikego::SilikegoCore
 		"-framework Cocoa"
 )
-
-get_target_property(SILIKEGO_TYPE Silikego::Silikego TYPE)
-if (${SILIKEGO_TYPE} STREQUAL SHARED_LIBRARY)
-	set_target_properties(SilikegujoForMacOS PROPERTIES
-		BUILD_WITH_INSTALL_RPATH        On
-		INSTALL_RPATH                   "@executable_path/../Frameworks"
-	)
-
-	if(SILIKEGO_BUILD_FRAMEWORK)
-		add_custom_command(TARGET SilikegujoForMacOS POST_BUILD
-			COMMAND "cmake" "-E" "make_directory"
-				"$<TARGET_BUNDLE_CONTENT_DIR:SilikegujoForMacOS>/Frameworks/$<TARGET_FILE_NAME:Silikego>.framework/Versions/${PROJECT_VERSION}/Resources"
-			COMMAND "cmake" "-E" "copy"
-				"$<TARGET_FILE_DIR:Silikego>/Resources/Info.plist"
-				"$<TARGET_BUNDLE_CONTENT_DIR:SilikegujoForMacOS>/Frameworks/$<TARGET_FILE_NAME:Silikego>.framework/Versions/${PROJECT_VERSION}/Resources/"
-			COMMAND "cmake" "-E" "copy"
-				"$<TARGET_FILE:Silikego>"
-				"$<TARGET_BUNDLE_CONTENT_DIR:SilikegujoForMacOS>/Frameworks/$<TARGET_FILE_NAME:Silikego>.framework/Versions/${PROJECT_VERSION}/"
-			COMMAND "cmake" "-E" "create_symlink"
-				"${PROJECT_VERSION}"
-				"$<TARGET_BUNDLE_CONTENT_DIR:SilikegujoForMacOS>/Frameworks/$<TARGET_FILE_NAME:Silikego>.framework/Versions/Current"
-			COMMAND "cmake" "-E" "create_symlink"
-				"Versions/Current/Resources"
-				"$<TARGET_BUNDLE_CONTENT_DIR:SilikegujoForMacOS>/Frameworks/$<TARGET_FILE_NAME:Silikego>.framework/Resources"
-			COMMAND "cmake" "-E" "create_symlink"
-				"Versions/Current/$<TARGET_FILE_NAME:Silikego>"
-				"$<TARGET_BUNDLE_CONTENT_DIR:SilikegujoForMacOS>/Frameworks/$<TARGET_FILE_NAME:Silikego>.framework/$<TARGET_FILE_NAME:Silikego>"
-			COMMENT "Installing framework into application bundle"
-		)
-	else()
-		add_custom_command(TARGET SilikegujoForMacOS POST_BUILD
-			COMMAND "cmake" "-E" "make_directory"
-				"$<TARGET_BUNDLE_CONTENT_DIR:SilikegujoForMacOS>/Frameworks"
-			COMMAND "cmake" "-E" "copy"
-				"$<TARGET_FILE:Silikego>"
-				"$<TARGET_BUNDLE_CONTENT_DIR:SilikegujoForMacOS>/Frameworks/"
-			COMMAND "cmake" "-E" "create_symlink"
-				"$<TARGET_FILE_NAME:Silikego>"
-				"$<TARGET_BUNDLE_CONTENT_DIR:SilikegujoForMacOS>/Frameworks/$<TARGET_SONAME_FILE_NAME:Silikego>"
-			COMMENT "Installing dylib into application bundle"
-		)
-	endif()
-endif()
+silikego_core_fixup_bundle(SilikegujoForMacOS)
 
 install(TARGETS SilikegujoForMacOS
 BUNDLE
-	DESTINATION  ${SILIKEGO_INSTALL_APPDIR}
+	DESTINATION  ${SILIKEGUJO_INSTALL_APPDIR}
 	COMPONENT    Silikegujo
 )
