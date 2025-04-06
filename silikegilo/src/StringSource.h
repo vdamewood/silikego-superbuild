@@ -1,5 +1,5 @@
 /* StringSource.h: Class to input data from a string
- * Copyright 2012-2021 Vincent Damewood
+ * Copyright 2012-2025 Vincent Damewood
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
