@@ -1,4 +1,4 @@
-/* Main.cc: Entry point for Silikegilo
+/* Main.cc: Entry point for Silikego CLI
  * Copyright 2012-2025 Vincent Damewood
  *
  * This program is free software: you can redistribute it and/or modify

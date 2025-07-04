@@ -16,7 +16,7 @@
 
 cmake_minimum_required(VERSION 3.18)
 
-project(SilikegujoForWindows
+project(SilikegoGuiWindows
 	VERSION       0.0.0
 	DESCRIPTION   "GUI frontend for Silikego for Windows"
 	HOMEPAGE_URL  "https://vdamewood.com/software/projects/silikego"
@@ -30,8 +30,8 @@ if(NOT TARGET Silikego::SilikegoCore)
 	find_package(SilikegoCore REQUIRED)
 endif()
 
-add_executable(SilikegujoForWindows WIN32)
-target_sources(SilikegujoForWindows
+add_executable(SilikegoGuiWindows WIN32)
+target_sources(SilikegoGuiWindows
 	PRIVATE
 		src/EvalWindow.h
 		src/About.h
@@ -43,8 +43,8 @@ target_sources(SilikegujoForWindows
 		src/About.rc
 		src/Icon.rc
 )
-set_target_properties(SilikegujoForWindows PROPERTIES
-	OUTPUT_NAME               Silikegujo
+set_target_properties(SilikegoGuiWindows PROPERTIES
+	OUTPUT_NAME               silikego-gui-windows
 )
 if(PRERELEASE_SUFFIX STREQUAL "")
 	set(VSV_PRERELEASE_FLAG 0)
@@ -52,27 +52,27 @@ else()
 	set(VSV_PRERELEASE_FLAG VS_FF_PRERELEASE)
 endif()
 set(VSV_DEBUG_FLAG 0)
-set(VSV_FILENAME "Silikegujo.exe")
+set(VSV_FILENAME "silikego-gui-windows.exe")
 configure_file(
 	src/Version.rc.in
 	${CMAKE_CURRENT_BINARY_DIR}/Version.Release.rc
 	@ONLY
 )
-target_sources(SilikegujoForWindows PRIVATE $<$<CONFIG:Release>:${CMAKE_CURRENT_BINARY_DIR}/Version.Release.rc>)
+target_sources(SilikegoGuiWindows PRIVATE $<$<CONFIG:Release>:${CMAKE_CURRENT_BINARY_DIR}/Version.Release.rc>)
 
 set(VSV_DEBUG_FLAG VS_FF_DEBUG)
-set(VSV_FILENAME "Silikegujo.exe")
+set(VSV_FILENAME "silikego-gui-windows.exe")
 configure_file(
 	src/Version.rc.in
 	${CMAKE_CURRENT_BINARY_DIR}/Version.Debug.rc
 	@ONLY
 )
-target_sources(SilikegujoForWindows PRIVATE $<$<CONFIG:Debug>:${CMAKE_CURRENT_BINARY_DIR}/Version.Debug.rc>)
-target_compile_features(SilikegujoForWindows PRIVATE cxx_std_17)
-target_link_libraries(SilikegujoForWindows PRIVATE Silikego::SilikegoCore)
+target_sources(SilikegoGuiWindows PRIVATE $<$<CONFIG:Debug>:${CMAKE_CURRENT_BINARY_DIR}/Version.Debug.rc>)
+target_compile_features(SilikegoGuiWindows PRIVATE cxx_std_17)
+target_link_libraries(SilikegoGuiWindows PRIVATE Silikego::SilikegoCore)
 
-install(TARGETS SilikegujoForWindows
+install(TARGETS SilikegoGuiWindows
 RUNTIME
 	DESTINATION  ${CMAKE_INSTALL_BINDIR}
-	COMPONENT    Silikegujo
+	COMPONENT    SilikegoGuiWindows
 )

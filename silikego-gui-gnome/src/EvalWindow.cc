@@ -25,7 +25,7 @@
 
 #include "EvalWindow.h"
 
-static const char UiResource[] = "/com/vdamewood/SilikegujoForUnix/EvalWindow.ui";
+static const char UiResource[] = "/com/vdamewood/SilikegoGuiGnome/EvalWindow.ui";
 
 EvalWindow* EvalWindow::Create()
 {

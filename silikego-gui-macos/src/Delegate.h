@@ -1,4 +1,4 @@
-/* Main.cc: Entry point using GTKmm
+/* Delegate.h: Delegate for Cocoa
  * Copyright 2012-2025 Vincent Damewood
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,29 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtkmm.h>
+#import <Cocoa/Cocoa.h>
 
-#include <SilikegoCore/FunctionCaller.h>
+@interface SilikegoGuiDelegate : NSObject <NSApplicationDelegate>
 
-#include "EvalWindow.h"
+@property (weak) IBOutlet NSTextField *input;
+@property (weak) IBOutlet NSTextField *output;
 
-Glib::RefPtr<Gtk::Application> app;
+-(IBAction) Calculate:(id)sender;
 
-void ActivateApp()
-{
-	EvalWindow* MainWindow = EvalWindow::Create();
-	app->add_window(*MainWindow);
-	MainWindow->show();
-}
-
-int main(int argc, char *argv[])
-{
-	app = Gtk::Application::create("com.vdamewood.SilikegujoForUnix");
-	Silikego::FunctionCaller::SetUp();
-
-	app->signal_activate().connect(sigc::ptr_fun(ActivateApp));
-
-	int status = app->run(argc, argv);
-	Silikego::FunctionCaller::TearDown();
-	return status;
-}
+@end

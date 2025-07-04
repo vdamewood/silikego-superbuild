@@ -15,9 +15,9 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 cmake_minimum_required(VERSION 3.18)
 
-project(Silikegilo
+project(SilikegoCli
 	VERSION       0.0.0
-	DESCRIPTION   "Command-line frontend for Siliko"
+	DESCRIPTION   "Command-line frontend for Silikego"
 	HOMEPAGE_URL  "https://vdamewood.com/software/projects/silikego"
 	LANGUAGES     CXX
 )
@@ -31,30 +31,30 @@ if(NOT TARGET Silikego::SilikegoCore)
 endif()
 find_package(Readline)
 
-add_executable(Silikegilo)
-target_sources(Silikegilo
+add_executable(SilikegoCli)
+target_sources(SilikegoCli
 	PRIVATE
 		src/StringSource.h
 		src/Main.cc
 		src/StringSource.cc
 
 )
-set_target_properties(Silikegilo PROPERTIES
-	OUTPUT_NAME               silikegilo
+set_target_properties(SilikegoCli PROPERTIES
+	OUTPUT_NAME               silikego
 )
-target_compile_features(Silikegilo PRIVATE cxx_std_17)
-target_link_libraries(Silikegilo PRIVATE Silikego::SilikegoCore)
+target_compile_features(SilikegoCli PRIVATE cxx_std_17)
+target_link_libraries(SilikegoCli PRIVATE Silikego::SilikegoCore)
 
 if (UNIX)
-	target_compile_definitions(Silikegilo PRIVATE USE_UNIX=1)
+	target_compile_definitions(SilikegoCli PRIVATE USE_UNIX=1)
 endif()
 
 if(Readline_FOUND)
-	target_link_libraries(Silikegilo PRIVATE Readline::Readline)
-	target_compile_definitions(Silikegilo PRIVATE HAVE_READLINE=1)
+	target_link_libraries(SilikegoCli PRIVATE Readline::Readline)
+	target_compile_definitions(SilikegoCli PRIVATE HAVE_READLINE=1)
 else()
-	target_sources(Silikegilo PRIVATE src/rl.cc)
-	target_compile_definitions(Silikegilo PRIVATE HAVE_READLINE=0)
+	target_sources(SilikegoCli PRIVATE src/rl.cc)
+	target_compile_definitions(SilikegoCli PRIVATE HAVE_READLINE=0)
 endif()
 
 get_target_property(SILIKEGO_CORE_TYPE Silikego::SilikegoCore TYPE)
@@ -62,16 +62,16 @@ if(${SILIKEGO_CORE_TYPE} STREQUAL SHARED_LIBRARY)
 	if(APPLE)
 		get_target_property(SILIKEGO_CORE_FRAMEWORK Silikego::SilikegoCore FRAMEWORK)
 		if (SILIKEGO_CORE_FRAMEWORK)
-			set_target_properties(Silikegilo PROPERTIES
+			set_target_properties(SilikegoCli PROPERTIES
 				INSTALL_RPATH  "@executable_path/../Frameworks"
 			)
 		else()
-			set_target_properties(Silikegilo PROPERTIES
+			set_target_properties(SilikegoCli PROPERTIES
 				INSTALL_RPATH  "@executable_path/../${CMAKE_INSTALL_LIBDIR}"
 			)
 		endif()
 	else()
-		set_target_properties(Silikegilo PROPERTIES
+		set_target_properties(SilikegoCli PROPERTIES
 			INSTALL_RPATH  "\${Origin}/../${CMAKE_INSTALL_LIBDIR}"
 	)
 	endif()
@@ -85,26 +85,26 @@ if(WIN32)
 	endif()
 
 	set(VSV_DEBUG_FLAG 0)
-	set(VSV_FILENAME "silikegilo.exe")
+	set(VSV_FILENAME "silikego.exe")
 	configure_file(
 		src/version.rc.in
 		${CMAKE_CURRENT_BINARY_DIR}/version-release.rc
 		@ONLY
 	)
-	target_sources(Silikegilo PRIVATE $<$<CONFIG:Release>:${CMAKE_CURRENT_BINARY_DIR}/version-release.rc>)
+	target_sources(SilikegoCli PRIVATE $<$<CONFIG:Release>:${CMAKE_CURRENT_BINARY_DIR}/version-release.rc>)
 
 	set(VSV_DEBUG_FLAG VS_FF_DEBUG)
-	set(VSV_FILENAME "silikegilo.exe")
+	set(VSV_FILENAME "silikego.exe")
 	configure_file(
 		src/version.rc.in
 		${CMAKE_CURRENT_BINARY_DIR}/version-debug.rc
 		@ONLY
   	)
-	target_sources(Silikegilo PRIVATE $<$<CONFIG:Debug>:${CMAKE_CURRENT_BINARY_DIR}/version-debug.rc>)
+	target_sources(SilikegoCli PRIVATE $<$<CONFIG:Debug>:${CMAKE_CURRENT_BINARY_DIR}/version-debug.rc>)
 endif()
 
-install(TARGETS Silikegilo
+install(TARGETS SilikegoCli
 RUNTIME
 	DESTINATION  ${CMAKE_INSTALL_BINDIR}
-	COMPONENT    Silikegilo
+	COMPONENT    SilikegoCli
 )

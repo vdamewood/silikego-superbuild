@@ -16,9 +16,9 @@
 
 cmake_minimum_required(VERSION 3.18)
 
-project(SilikegujoForUnix
+project(SilikegoGuiGnome
 	VERSION       0.0.0
-	DESCRIPTION   "GUI frontend for Silikego for Unix"
+	DESCRIPTION   "GUI frontend for Silikego for GNOME"
 	HOMEPAGE_URL  "https://vdamewood.com/software/projects/silikego"
 	LANGUAGES     CXX
 )
@@ -56,8 +56,8 @@ add_custom_command(
 	DEPENDS src/gresource.xml src/EvalWindow.ui
 	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-add_executable(SilikegujoForUnix)
-target_sources(SilikegujoForUnix
+add_executable(SilikegoGuiGnome)
+target_sources(SilikegoGuiGnome
 	PRIVATE
 		src/Main.cc
 		src/EvalWindow.cc
@@ -65,24 +65,28 @@ target_sources(SilikegujoForUnix
 		src/EvalWindow.h
 		gresource.h
 )
-set_target_properties(SilikegujoForUnix PROPERTIES
-	OUTPUT_NAME               Silikegujo
+set_target_properties(SilikegoGuiGnome PROPERTIES
+	OUTPUT_NAME               silikego-gui-gnome
 )
-target_compile_features(SilikegujoForUnix PRIVATE cxx_std_17)
-target_link_libraries(SilikegujoForUnix PRIVATE Silikego::SilikegoCore PkgConfig::Gtk)
+target_compile_features(SilikegoGuiGnome PRIVATE cxx_std_17)
+target_link_libraries(SilikegoGuiGnome
+	PRIVATE
+		Silikego::SilikegoCore
+		PkgConfig::Gtk
+)
 
-install(TARGETS SilikegujoForUnix
+install(TARGETS SilikegoGuiGnome
 RUNTIME
 	DESTINATION  ${CMAKE_INSTALL_BINDIR}
-	COMPONENT    Silikegujo
+	COMPONENT    SilikegoGuiGnome
 )
 
-install(FILES src/silikegujo.desktop
+install(FILES src/silikego-gui-gnome.desktop
 	DESTINATION  "${CMAKE_INSTALL_DATADIR}/applications"
-	COMPONENT    Silikegujo
+	COMPONENT    SilikegoGuiGnome
 )
 
-install(FILES src/silikegujo.png
+install(FILES src/silikego-gui-gnome.png
 	DESTINATION  "${CMAKE_INSTALL_DATADIR}/icons/hicolor/48x48/apps"
-	COMPONENT    Silikegujo
+	COMPONENT    SilikegoGuiGnome
 )

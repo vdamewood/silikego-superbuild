@@ -1,9 +1,9 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Silikegujo
+Name=Silikego GUI
 Comment=Math parser and calculator
 Type=Application
-Exec=Silikegujo
-Icon=silikego
+Exec=silikego-gui-gnome
+Icon=silikego-gui-gnome
 Terminal=false
 Categories=GTK;Utility
