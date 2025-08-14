@@ -16,11 +16,13 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#include <SilikegoCore/FunctionCaller.h>
 
 @interface SilikegoGuiDelegate : NSObject <NSApplicationDelegate>
 
 @property (weak) IBOutlet NSTextField *input;
 @property (weak) IBOutlet NSTextField *output;
+@property Silikego::FunctionCaller *caller;
 
 -(IBAction) Calculate:(id)sender;
 

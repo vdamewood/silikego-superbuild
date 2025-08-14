@@ -21,6 +21,7 @@
 #include <memory>
 
 #include <SilikegoCore/Api.h>
+#include <SilikegoCore/FunctionCaller.h>
 #include <SilikegoCore/Value.h>
 
 namespace Silikego
@@ -29,7 +30,7 @@ namespace Silikego
 	{
 	public:
 		virtual ~SyntaxTreeNode();
-		virtual Silikego::Value Evaluate() = 0;
+		virtual Silikego::Value Evaluate(FunctionCaller&) = 0;
 		virtual void Negate() = 0;
 		virtual bool IsError() = 0;
 	};
@@ -43,7 +44,7 @@ namespace Silikego
 
 		const LeafNode& operator=(const LeafNode&);
 
-		virtual Silikego::Value Evaluate();
+		virtual Silikego::Value Evaluate(FunctionCaller& caller);
 		virtual void Negate();
 		virtual bool IsError();
 	private:
@@ -57,7 +58,7 @@ namespace Silikego
 		BranchNode(const std::string& NewFunctionId);
 		virtual ~BranchNode();
 
-		virtual Silikego::Value Evaluate();
+		virtual Silikego::Value Evaluate(FunctionCaller& caller);
 		virtual void Negate();
 		virtual bool IsError();
 

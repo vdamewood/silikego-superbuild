@@ -56,7 +56,9 @@ int main(int argc, char *argv[])
 		response = "";
 	}
 
-	Silikego::FunctionCaller::SetUp();
+	Silikego::FunctionCaller caller;
+	caller.InstallOperators();
+	caller.InstallFunctions();
 
 	char *expression = NULL;
 	char *old_expression = NULL;
@@ -79,14 +81,12 @@ int main(int argc, char *argv[])
 
 		std::unique_ptr<Silikego::SyntaxTreeNode> Tree
 			= Silikego::ParseInfix(std::unique_ptr<Silikego::DataSource>(new StringSource(expression)));
-		Silikego::Value result = Tree->Evaluate();
+		Silikego::Value result = Tree->Evaluate(caller);
 
 		std::string ResultString = result.ToString();
 		std::cout << ResultString << std::endl;
 		old_expression = expression;
 	}
-
-	Silikego::FunctionCaller::TearDown();
 
 	if (ISATTY())
 	{

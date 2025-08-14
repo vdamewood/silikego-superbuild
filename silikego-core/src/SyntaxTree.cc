@@ -60,7 +60,7 @@ namespace Silikego
 	}
 
 
-	Value LeafNode::Evaluate()
+	Value LeafNode::Evaluate(FunctionCaller&)
 	{
 		return S->MyValue;
 	}
@@ -94,21 +94,21 @@ namespace Silikego
 		delete S;
 	}
 
-	Value BranchNode::Evaluate()
+	Value BranchNode::Evaluate(FunctionCaller& caller)
 	{
 		std::vector<Value> Arguments;
 
 		if (S->Children.size())
 			for (auto& i : S->Children)
 			{
-				Value Current = i->Evaluate();
+				Value Current = i->Evaluate(caller);
 				if (!Current.IsNumber())
 					return Current;
 
 				Arguments.push_back(Current);
 			}
 
-		Value rVal(FunctionCaller::Call(S->Id.c_str(), Arguments));
+		Value rVal(caller.Call(S->Id.c_str(), Arguments));
 		if (S->IsNegated)
 		{
 			if (rVal.Status() == ValueStatus::INTEGER)

@@ -71,8 +71,21 @@ void OnCreate(HWND Handle)
 		MIN_WIDTH - BUTTON_X, BUTTON_Y, BUTTON_WT, BUTTON_HT,
 		Handle, (HMENU)CALCULATOR_BUTTON,
 		GetModuleHandle(NULL), NULL);
+
+		Silikego::FunctionCaller *caller = new Silikego::FunctionCaller();
+		caller->InstallOperators();
+		caller->InstallFunctions();
+		SetProp(Handle, "Caller", caller);
 }
 
+void OnClose(HWND Handle)
+{
+	Silikego::FunctionCaller *caller =
+		static_cast<Silikego::FunctionCaller*>
+		(RemoveProp(Handle, "Caller"));
+	delete caller;
+	DestroyWindow(Handle);
+}
 
 void OnGetMinMaxInfo(HWND hwnd, MINMAXINFO *info)
 {
@@ -99,6 +112,10 @@ void OnSize(HWND hwnd)
 
 void OnCalculate(HWND hwnd)
 {
+	Silikego::FunctionCaller *caller =
+		static_cast<Silikego::FunctionCaller*>
+		(GetProp(hwnd, "Caller"));
+
 	int ExpressionSize = GetWindowTextLength(GetDlgItem(hwnd, CALCULATOR_INPUT)) + 1;
 	char *inBuffer = static_cast<char*>(GlobalAlloc(GPTR, ExpressionSize));
 	GetDlgItemText(hwnd, CALCULATOR_INPUT, inBuffer, ExpressionSize);
@@ -109,7 +126,7 @@ void OnCalculate(HWND hwnd)
 				new Silikego::StringSource(inBuffer)));
 	GlobalFree(static_cast<HANDLE>(inBuffer));
 
-	Silikego::Value Value = Node->Evaluate();
+	Silikego::Value Value = Node->Evaluate(*caller);
 
 	std::string outString = Value.ToString();
 	SetDlgItemText(hwnd, CALCULATOR_OUTPUT, outString.c_str());
@@ -129,26 +146,26 @@ LRESULT CALLBACK EvalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 		OnSize(hwnd);
 		return 0;
 	case WM_CLOSE:
-		DestroyWindow(hwnd);
+		OnClose(hwnd);
 		return 0;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
-        case WM_COMMAND:
-        	switch(LOWORD(wParam))
-        	{
-			case CALCULATOR_BUTTON:
-				OnCalculate(hwnd);
-				return 0;
-			case HELP_ABOUT:
-				DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(ABOUT_DIALOG), hwnd, (DLGPROC)AboutDialogProc);
-				return 0;
-			case CALCULATOR_EXIT:
-				PostMessage(hwnd, WM_CLOSE, 0, 0);
-				return 0;
-			default:
-				return 0;
-			}
+	case WM_COMMAND:
+		switch(LOWORD(wParam))
+		{
+		case CALCULATOR_BUTTON:
+			OnCalculate(hwnd);
+			return 0;
+		case HELP_ABOUT:
+			DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(ABOUT_DIALOG), hwnd, (DLGPROC)AboutDialogProc);
+			return 0;
+		case CALCULATOR_EXIT:
+			PostMessage(hwnd, WM_CLOSE, 0, 0);
+			return 0;
+		default:
+			return 0;
+		}
 	default:
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}

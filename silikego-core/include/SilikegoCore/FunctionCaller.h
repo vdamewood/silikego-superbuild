@@ -27,14 +27,22 @@
 
 namespace Silikego
 {
-	namespace FunctionCaller
+	class SILIKEGOCORE_EXPORT FunctionCaller
 	{
+	public:
 		typedef Value (*FunctionPointer)(std::vector<Value>);
 
-		SILIKEGOCORE_EXPORT bool SetUp();
-		SILIKEGOCORE_EXPORT void TearDown();
-		SILIKEGOCORE_EXPORT Value Call(const std::string &Name, std::vector<Value> Args);
-		SILIKEGOCORE_EXPORT void Install(const std::string &Name, FunctionPointer Function);
+		FunctionCaller();
+		~FunctionCaller();
+
+		Value Call(const std::string &Name, std::vector<Value> Args);
+		void Install(const std::string &Name, FunctionPointer Function);
+		void InstallOperators();
+		void InstallFunctions();
+
+	private:
+		class State;
+		State *S;	
 	};
 };
 #endif // SILIKEGO_FUNCTION_CALLER_H

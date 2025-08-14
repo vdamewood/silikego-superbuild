@@ -24,33 +24,31 @@
 
 namespace Silikego
 {
-
-	// This is initialized as a null pointer rather than a static object so that
-	// bindings can be created for language interpreters written in C.
-	std::unordered_map<std::string, FunctionCaller::FunctionPointer> *lookup = 0;
-
-	bool FunctionCaller::SetUp()
+	class FunctionCaller::State
 	{
-		try
-		{
-			lookup = new std::unordered_map<std::string,
-				FunctionCaller::FunctionPointer>();
-		}
-		catch (...)
-		{
-			lookup = 0;
-			return false;
-		}
+	public:
+		std::unordered_map<std::string, FunctionCaller::FunctionPointer> lookup;
+	};
 
-		// Built-in operators
+	FunctionCaller::FunctionCaller(): S(new State) { }
+
+	FunctionCaller::~FunctionCaller()
+	{
+		delete S;
+	}
+
+	void FunctionCaller::InstallOperators()
+	{
 		Install("add", Functions::add);
 		Install("subtract", Functions::subtract);
 		Install("multiply", Functions::multiply);
 		Install("divide", Functions::divide);
 		Install("power", Functions::power);
 		Install("dice", Functions::dice);
+	}
 
-		// Math library functions
+	void FunctionCaller::InstallFunctions()
+	{
 		Install("abs", Functions::abs);
 		Install("acos", Functions::acos);
 		Install("asin", Functions::asin);
@@ -67,25 +65,18 @@ namespace Silikego
 		Install("sqrt", Functions::sqrt);
 		Install("tan", Functions::tan);
 		Install("tanh", Functions::tanh);
-
-		return true;
 	}
 
-	void FunctionCaller::TearDown()
-	{
-		delete lookup;
-		lookup = 0;
-	}
 
 	void FunctionCaller::Install(const std::string &Name, FunctionPointer Function)
 	{
-		(*lookup)[Name] = Function;
+		S->lookup[Name] = Function;
 	}
 
 	Value FunctionCaller::Call(const std::string &Name, std::vector<Value> Args)
 	try
 	{
-		return lookup->at(Name)(Args);
+		return S->lookup.at(Name)(Args);
 	}
 	catch (const std::out_of_range &)
 	{

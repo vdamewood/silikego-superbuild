@@ -30,7 +30,9 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-	Silikego::FunctionCaller::SetUp();
+	self.caller = new Silikego::FunctionCaller();
+	self.caller->InstallOperators();
+	self.caller->InstallFunctions();
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
@@ -40,7 +42,7 @@
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification
 {
-	Silikego::FunctionCaller::TearDown();
+	delete self.caller;
 }
 
 - (IBAction) Calculate:(id)sender
@@ -48,7 +50,7 @@
 	std::unique_ptr<Silikego::SyntaxTreeNode> Ast = Silikego::ParseInfix(
 		std::unique_ptr<Silikego::DataSource>(new Silikego::StringSource(
 			[[self.input stringValue] UTF8String])));
-	Silikego::Value Result = Ast->Evaluate();
+	Silikego::Value Result = Ast->Evaluate(*self.caller);
 
 	std::string ResultString = Result.ToString();
 	NSString *ResultNSString = [[NSString alloc] initWithUTF8String: ResultString.c_str()];

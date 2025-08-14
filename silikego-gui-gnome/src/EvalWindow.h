@@ -20,6 +20,8 @@
 
 #include <gtkmm.h>
 
+#include <SilikegoCore/FunctionCaller.h>
+
 class EvalWindow : public Gtk::Window
 {
 public:
@@ -34,6 +36,7 @@ private:
 	Gtk::Button* MyButton;
 	Gtk::Entry* MyInput;
 	Gtk::Label* MyOutput;
+	Silikego::FunctionCaller MyCaller;
 };
 
 #endif /* EVAL_WINDOW_H */

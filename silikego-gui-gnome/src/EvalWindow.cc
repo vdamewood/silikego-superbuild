@@ -42,6 +42,8 @@ EvalWindow::EvalWindow(
 	MyInput(builder->get_widget<Gtk::Entry>("Input")),
 	MyOutput(builder->get_widget<Gtk::Label>("Output"))
 {
+	MyCaller.InstallOperators();
+	MyCaller.InstallFunctions();
 	MyButton->signal_clicked().connect(
 		sigc::mem_fun(
 			*this,
@@ -56,7 +58,7 @@ void EvalWindow::Calculate()
 		Silikego::ParseInfix(
 		std::unique_ptr<Silikego::DataSource>(new Silikego::StringSource(
 			MyInput->get_text().c_str())));
-	Silikego::Value Value = ResultTree->Evaluate();
+	Silikego::Value Value = ResultTree->Evaluate(MyCaller);
 
 	std::string ResultString = Value.ToString();
 	MyOutput->set_text(ResultString.c_str());

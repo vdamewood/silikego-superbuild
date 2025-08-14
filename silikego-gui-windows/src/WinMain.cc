@@ -17,8 +17,6 @@
 
 #include <windows.h>
 
-#include <SilikegoCore/FunctionCaller.h>
-
 #include "EvalWindow.h"
 
 int WINAPI WinMain(
@@ -29,8 +27,6 @@ int WINAPI WinMain(
 {
 	HWND Handle;
 	MSG Message;
-
-	Silikego::FunctionCaller::SetUp();
 
 	if(!EvalWindowRegister(hInstance)
 		|| !(Handle = EvalWindowCreate(hInstance)))
@@ -53,6 +49,5 @@ int WINAPI WinMain(
 		}
 	}
 
-	Silikego::FunctionCaller::TearDown();
 	return (int) Message.wParam;
 }
