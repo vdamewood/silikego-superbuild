@@ -137,40 +137,4 @@ namespace Silikego
 	{
 		return (S->Status == ValueStatus::INTEGER || S->Status == ValueStatus::FLOAT);
 	}
-
-	std::string Value::ToString() const
-	{
-		std::ostringstream tmp;
-		switch (S->Status)
-		{
-		case ValueStatus::INTEGER:
-			tmp << Integer();
-			break;
-		case ValueStatus::FLOAT:
-			tmp << Float();
-			break;
-		case ValueStatus::MEMORY_ERR:
-			tmp << "Error: Out of memory";
-			break;
-		case ValueStatus::SYNTAX_ERR:
-			tmp << "Error: Syntax error";
-			break;
-		case ValueStatus::ZERO_DIV_ERR:
-			tmp << "Error: Division by zero";
-			break;
-		case ValueStatus::BAD_FUNCTION:
-			tmp << "Error: Function not found";
-			break;
-		case ValueStatus::BAD_ARGUMENTS:
-			tmp << "Error: Bad argument count";
-			break;
-		case ValueStatus::DOMAIN_ERR:
-			tmp << "Error: Domain error";
-			break;
-		case ValueStatus::RANGE_ERR:
-			tmp << "Error: Range error";
-		}
-
-		return tmp.str();
-	}
 }

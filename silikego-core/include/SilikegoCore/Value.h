@@ -68,7 +68,6 @@ namespace Silikego
 		double Float() const;
 
 		bool IsNumber() const;
-		std::string ToString() const;
 	private:
 		class State;
 		State *S;

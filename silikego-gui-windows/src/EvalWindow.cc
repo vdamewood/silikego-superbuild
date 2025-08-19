@@ -20,6 +20,8 @@
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
+#include <sstream>
 
 #include <memory>
 
@@ -128,8 +130,38 @@ void OnCalculate(HWND hwnd)
 
 	Silikego::Value Value = Node->Evaluate(*caller);
 
-	std::string outString = Value.ToString();
-	SetDlgItemText(hwnd, CALCULATOR_OUTPUT, outString.c_str());
+	std::ostringstream tmp;
+	switch (Value.Status())
+	{
+	case Silikego::ValueStatus::INTEGER:
+		tmp << Value.Integer();
+		break;
+	case Silikego::ValueStatus::FLOAT:
+		tmp << Value.Float();
+		break;
+	case Silikego::ValueStatus::MEMORY_ERR:
+		tmp << "Error: Out of memory";
+		break;
+	case Silikego::ValueStatus::SYNTAX_ERR:
+		tmp << "Error: Syntax error";
+		break;
+	case Silikego::ValueStatus::ZERO_DIV_ERR:
+		tmp << "Error: Division by zero";
+		break;
+	case Silikego::ValueStatus::BAD_FUNCTION:
+		tmp << "Error: Function not found";
+		break;
+	case Silikego::ValueStatus::BAD_ARGUMENTS:
+		tmp << "Error: Bad argument count";
+		break;
+	case Silikego::ValueStatus::DOMAIN_ERR:
+		tmp << "Error: Domain error";
+		break;
+	case Silikego::ValueStatus::RANGE_ERR:
+		tmp << "Error: Range error";
+	}
+
+	SetDlgItemText(hwnd, CALCULATOR_OUTPUT, tmp.str().c_str());
 }
 
 LRESULT CALLBACK EvalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

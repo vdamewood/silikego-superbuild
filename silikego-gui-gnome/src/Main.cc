@@ -33,11 +33,6 @@ void ActivateApp()
 int main(int argc, char *argv[])
 {
 	app = Gtk::Application::create("com.vdamewood.SilikegoGuiGnome");
-	Silikego::FunctionCaller::SetUp();
-
 	app->signal_activate().connect(sigc::ptr_fun(ActivateApp));
-
-	int status = app->run(argc, argv);
-	Silikego::FunctionCaller::TearDown();
-	return status;
+	return app->run(argc, argv);
 }

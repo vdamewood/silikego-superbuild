@@ -60,6 +60,39 @@ void EvalWindow::Calculate()
 			MyInput->get_text().c_str())));
 	Silikego::Value Value = ResultTree->Evaluate(MyCaller);
 
-	std::string ResultString = Value.ToString();
-	MyOutput->set_text(ResultString.c_str());
+	Glib::ustring ResultString;
+	switch (Value.Status())
+	{
+	case Silikego::ValueStatus::INTEGER:
+		ResultString = std::to_string(Value.Integer());
+		break;
+	case Silikego::ValueStatus::FLOAT:
+		ResultString = std::to_string(Value.Float());
+		break;
+	case Silikego::ValueStatus::MEMORY_ERR:
+		ResultString = "Memory error";
+		break;
+	case Silikego::ValueStatus::SYNTAX_ERR:
+		ResultString = "Syntax error";
+		break;
+	case Silikego::ValueStatus::ZERO_DIV_ERR:
+		ResultString = "Division by zero";
+		break;
+	case Silikego::ValueStatus::BAD_FUNCTION:
+		ResultString = "Function not found";
+		break;
+	case Silikego::ValueStatus::BAD_ARGUMENTS:
+		ResultString = "Bad argument count";
+		break;
+	case Silikego::ValueStatus::DOMAIN_ERR:
+		ResultString = "Domain error";
+		break;
+	case Silikego::ValueStatus::RANGE_ERR:
+		ResultString = "Range error";
+		break;
+	default:
+		ResultString = "Unexpected error";
+	}
+
+	MyOutput->set_text(ResultString);
 }

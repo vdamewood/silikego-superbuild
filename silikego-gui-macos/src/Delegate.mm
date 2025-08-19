@@ -52,8 +52,37 @@
 			[[self.input stringValue] UTF8String])));
 	Silikego::Value Result = Ast->Evaluate(*self.caller);
 
-	std::string ResultString = Result.ToString();
-	NSString *ResultNSString = [[NSString alloc] initWithUTF8String: ResultString.c_str()];
-	[self.output setStringValue: ResultNSString];
+	switch (Result.Status())
+	{
+	case Silikego::ValueStatus::INTEGER:
+		[self.output setIntegerValue: Result.Integer()];
+		break;
+	case  Silikego::ValueStatus::FLOAT:
+		[self.output setDoubleValue: Result.Float()];
+		break;
+	case Silikego::ValueStatus::MEMORY_ERR:
+		[self.output setStringValue: @"Out of memory"];
+		break;
+	case Silikego::ValueStatus::SYNTAX_ERR:
+		[self.output setStringValue: @"Syntax error"];
+		break;
+	case Silikego::ValueStatus::ZERO_DIV_ERR:
+		[self.output setStringValue: @"Division by zero"];
+		break;
+	case Silikego::ValueStatus::BAD_FUNCTION:
+		[self.output setStringValue: @"Function not found"];
+		break;
+	case Silikego::ValueStatus::BAD_ARGUMENTS:
+		[self.output setStringValue: @"Bad argument count"];
+		break;
+	case Silikego::ValueStatus::DOMAIN_ERR:
+		[self.output setStringValue: @"Domain error"];
+		break;
+	case Silikego::ValueStatus::RANGE_ERR:
+		[self.output setStringValue: @"Range error"];
+		break;
+	default:
+		[self.output setStringValue: @"Unexpected error"];
+	}
 }
 @end

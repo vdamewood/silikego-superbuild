@@ -77,15 +77,41 @@ int main(int argc, char *argv[])
 			add_history(expression);
 
 		std::free(static_cast<void*>(old_expression));
-		old_expression = NULL;
+		old_expression = expression;
 
 		std::unique_ptr<Silikego::SyntaxTreeNode> Tree
 			= Silikego::ParseInfix(std::unique_ptr<Silikego::DataSource>(new StringSource(expression)));
 		Silikego::Value result = Tree->Evaluate(caller);
 
-		std::string ResultString = result.ToString();
-		std::cout << ResultString << std::endl;
-		old_expression = expression;
+		switch (result.Status())
+		{
+		case Silikego::ValueStatus::INTEGER:
+			std::cout << result.Integer() << std::endl;
+			break;
+		case Silikego::ValueStatus::FLOAT:
+			std::cout << result.Float() << std::endl;
+			break;
+		case Silikego::ValueStatus::MEMORY_ERR:
+			std::cout << "Error: Out of memory\n";
+			break;
+		case Silikego::ValueStatus::SYNTAX_ERR:
+			std::cout << "Error: Syntax error\n";
+			break;
+		case Silikego::ValueStatus::ZERO_DIV_ERR:
+			std::cout << "Error: Division by zero\n";
+			break;
+		case Silikego::ValueStatus::BAD_FUNCTION:
+			std::cout << "Error: Function not found\n";
+			break;
+		case Silikego::ValueStatus::BAD_ARGUMENTS:
+			std::cout << "Error: Bad argument count\n";
+			break;
+		case Silikego::ValueStatus::DOMAIN_ERR:
+			std::cout << "Error: Domain error\n";
+			break;
+		case Silikego::ValueStatus::RANGE_ERR:
+			std::cout << "Error: Range error\n";
+		}
 	}
 
 	if (ISATTY())
