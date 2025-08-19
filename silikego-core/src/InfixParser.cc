@@ -26,13 +26,13 @@ namespace Silikego
 	static std::unique_ptr<SyntaxTreeNode> GetTerm(Lexer&);
 	static std::unique_ptr<SyntaxTreeNode> GetTermRest(Lexer&);
 	static std::unique_ptr<SyntaxTreeNode> GetExponent(Lexer&);
-	static std::unique_ptr<SyntaxTreeNode> GetExponentLeftFactor(Lexer&);
+	static std::unique_ptr<SyntaxTreeNode> GetExponentRest(Lexer&);
 	static std::unique_ptr<SyntaxTreeNode> GetRoll(Lexer&);
-	static std::unique_ptr<SyntaxTreeNode> GetRollLeftFactor(Lexer&);
+	static std::unique_ptr<SyntaxTreeNode> GetRollRest(Lexer&);
 	static std::unique_ptr<SyntaxTreeNode> GetAtom(Lexer&);
 	static std::unique_ptr<SyntaxTreeNode> GetNumber(Lexer&);
-	static std::unique_ptr<SyntaxTreeNode> GetUNumber(Lexer&);
-	static std::unique_ptr<SyntaxTreeNode> GetFCall(Lexer&);
+	static std::unique_ptr<SyntaxTreeNode> GetUnsignedNumber(Lexer&);
+	static std::unique_ptr<SyntaxTreeNode> GetFunctionCall(Lexer&);
 	static std::unique_ptr<SyntaxTreeNode> GetArguments(Lexer&, const std::string&);
 
 
@@ -146,7 +146,7 @@ namespace Silikego
 	static std::unique_ptr<SyntaxTreeNode> GetExponent(Lexer& MyLexer)
 	{
 		std::unique_ptr<SyntaxTreeNode> leftValue = GetRoll(MyLexer);
-		std::unique_ptr<SyntaxTreeNode> Rest = GetExponentLeftFactor(MyLexer);
+		std::unique_ptr<SyntaxTreeNode> Rest = GetExponentRest(MyLexer);
 
 		if (Rest.get() == nullptr)
 			return leftValue;
@@ -157,7 +157,7 @@ namespace Silikego
 		return std::move(rVal);
 	}
 
-	static std::unique_ptr<SyntaxTreeNode> GetExponentLeftFactor(Lexer& MyLexer)
+	static std::unique_ptr<SyntaxTreeNode> GetExponentRest(Lexer& MyLexer)
 	{
 		if (MyLexer.GetToken().Type() != '^')
 			return std::unique_ptr<SyntaxTreeNode>(nullptr);
@@ -180,7 +180,7 @@ namespace Silikego
 	static std::unique_ptr<SyntaxTreeNode> GetRoll(Lexer& MyLexer)
 	{
 		std::unique_ptr<SyntaxTreeNode> leftValue = GetAtom(MyLexer);
-		std::unique_ptr<SyntaxTreeNode> Rest = GetRollLeftFactor(MyLexer);
+		std::unique_ptr<SyntaxTreeNode> Rest = GetRollRest(MyLexer);
 
 		if (Rest.get() == nullptr)
 			return leftValue;
@@ -191,7 +191,7 @@ namespace Silikego
         return std::move(rVal);
 	}
 
-	static std::unique_ptr<SyntaxTreeNode> GetRollLeftFactor(Lexer& MyLexer)
+	static std::unique_ptr<SyntaxTreeNode> GetRollRest(Lexer& MyLexer)
 	{
 		if(MyLexer.GetToken().Type() != 'd')
 			return std::unique_ptr<SyntaxTreeNode>(nullptr);
@@ -232,7 +232,7 @@ namespace Silikego
 			MyLexer.Next();
 			return value;
 		case Token::ID:
-			return GetFCall(MyLexer);
+			return GetFunctionCall(MyLexer);
 		default:
 			return std::unique_ptr<SyntaxTreeNode>(new LeafNode(ValueStatus::SYNTAX_ERR));
 		}
@@ -246,10 +246,10 @@ namespace Silikego
 		{
 		case Token::INTEGER:
 		case Token::FLOAT:
-			return GetUNumber(MyLexer);
+			return GetUnsignedNumber(MyLexer);
 		case '-':
 			MyLexer.Next();
-			rVal = GetUNumber(MyLexer);
+			rVal = GetUnsignedNumber(MyLexer);
 			rVal->Negate();
 			return rVal;
 		default:
@@ -257,7 +257,7 @@ namespace Silikego
 		}
 	}
 
-	static std::unique_ptr<SyntaxTreeNode> GetUNumber(Lexer& MyLexer)
+	static std::unique_ptr<SyntaxTreeNode> GetUnsignedNumber(Lexer& MyLexer)
 	{
 		std::unique_ptr<SyntaxTreeNode> rVal;
 
@@ -276,7 +276,7 @@ namespace Silikego
 		}
 	}
 
-	static std::unique_ptr<SyntaxTreeNode> GetFCall(Lexer& MyLexer)
+	static std::unique_ptr<SyntaxTreeNode> GetFunctionCall(Lexer& MyLexer)
 	{
 		if (MyLexer.GetToken().Type() != Token::ID)
 			return std::unique_ptr<SyntaxTreeNode>(new LeafNode(ValueStatus::SYNTAX_ERR));
