@@ -139,44 +139,4 @@ namespace Silikego
 	{
 		S->Children.push_back(std::move(NewChild));
 	}
-
-	bool BranchNode::GraftLeft(std::unique_ptr<SyntaxTreeNode> NewChild)
-	{
-		if (S->Children.size() == 0)
-		{
-			return false;
-		}
-		else if (S->Children.front() == nullptr)
-		{
-            S->Children.front() = std::move(NewChild);
-			return true;
-		}
-		else
-		{
-			if (BranchNode *ChildBranch = dynamic_cast<BranchNode*>(S->Children.front().get()))
-                return ChildBranch->GraftLeft(std::move(NewChild));
-			else
-				return false;
-		}
-	}
-
-	bool BranchNode::GraftRight(std::unique_ptr<SyntaxTreeNode> NewChild)
-	{
-		if (S->Children.size() == 0)
-		{
-			return false;
-		}
-		else if (S->Children.back() == nullptr)
-		{
-			S->Children.back() = std::move(NewChild);
-			return true;
-		}
-		else
-		{
-			if (BranchNode *ChildBranch = dynamic_cast<BranchNode*>(S->Children.back().get()))
-				return ChildBranch->GraftRight(std::move(NewChild));
-			else
-				return false;
-		}
-	}
 }

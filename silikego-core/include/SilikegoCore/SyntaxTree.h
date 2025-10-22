@@ -64,8 +64,6 @@ namespace Silikego
 
 		void PushLeft(std::unique_ptr<SyntaxTreeNode>);
 		void PushRight(std::unique_ptr<SyntaxTreeNode>);
-		bool GraftLeft(std::unique_ptr<SyntaxTreeNode>);
-		bool GraftRight(std::unique_ptr<SyntaxTreeNode>);
 	private:
 		BranchNode(const BranchNode&);
 		const BranchNode& operator=(const BranchNode&);
