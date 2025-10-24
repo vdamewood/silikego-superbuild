@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this library. If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.30)
 
 project(SilikegoCore
 	VERSION       0.0.0
@@ -49,20 +49,23 @@ endif()
 
 add_library(SilikegoCore)
 add_library(Silikego::SilikegoCore ALIAS SilikegoCore)
-set(PUBLIC_HEADERS
-	include/SilikegoCore/Value.h
-	include/SilikegoCore/FunctionCaller.h
-	include/SilikegoCore/SyntaxTree.h
-	include/SilikegoCore/DataSource.h
-	include/SilikegoCore/StringSource.h
-	include/SilikegoCore/Token.h
-	include/SilikegoCore/Lexer.h
-	include/SilikegoCore/InfixParser.h
-	${CMAKE_CURRENT_BINARY_DIR}/include/SilikegoCore/Api.h
-)
 target_sources(SilikegoCore
+	PUBLIC
+		FILE_SET HEADERS
+		BASE_DIRS
+			include
+			${CMAKE_CURRENT_BINARY_DIR}/include
+		FILES
+			include/SilikegoCore/Value.h
+			include/SilikegoCore/FunctionCaller.h
+			include/SilikegoCore/SyntaxTree.h
+			include/SilikegoCore/DataSource.h
+			include/SilikegoCore/StringSource.h
+			include/SilikegoCore/Token.h
+			include/SilikegoCore/Lexer.h
+			include/SilikegoCore/InfixParser.h
+			${CMAKE_CURRENT_BINARY_DIR}/include/SilikegoCore/Api.h
 	PRIVATE
-		${PUBLIC_HEADERS}
 		src/Functions.h
 		src/Value.cc
 		src/Functions.cc
@@ -74,17 +77,8 @@ target_sources(SilikegoCore
 		src/Lexer.cc
 		src/InfixParser.cc
 )
-target_include_directories(SilikegoCore
-	PUBLIC
-		"$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>"
-		"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-)
-if (NOT SILIKEGO_CORE_BUILD_FRAMEWORK)
-	target_include_directories(SilikegoCore
-	INTERFACE
-		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-endif()
 target_compile_features(SilikegoCore PRIVATE cxx_std_11)
+get_target_property(PUBLIC_HEADERS SilikegoCore HEADER_SET_HEADERS)
 set_target_properties(SilikegoCore PROPERTIES
 	PUBLIC_HEADER             "${PUBLIC_HEADERS}"
 	C_VISIBILITY_PRESET       hidden
@@ -147,7 +141,7 @@ LIBRARY
 FRAMEWORK
 	DESTINATION           "${SILIKEGO_CORE_INSTALL_FRAMEWORKDIR}"
 	COMPONENT             "${DEVELOPMENT_COMPONENT}"
-PUBLIC_HEADER
+FILE_SET HEADERS
 	DESTINATION           "${CMAKE_INSTALL_INCLUDEDIR}/SilikegoCore"
 	COMPONENT             "${DEVELOPMENT_COMPONENT}"
 )
