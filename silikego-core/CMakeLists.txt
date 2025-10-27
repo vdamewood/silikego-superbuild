@@ -105,13 +105,13 @@ set_target_properties(SilikegoCore PROPERTIES
 )
 
 configure_file(
-	src/version.cc.in
-	${CMAKE_CURRENT_BINARY_DIR}/version.cc
+	src/Version.cc.in
+	${CMAKE_CURRENT_BINARY_DIR}/Version.cc
 	@ONLY
 )
 target_sources(SilikegoCore
 	PRIVATE
-		${CMAKE_CURRENT_BINARY_DIR}/version.cc
+		${CMAKE_CURRENT_BINARY_DIR}/Vgersion.cc
 )
 
 if(WIN32)
