@@ -30,8 +30,7 @@ set(SILIKEGO_CORE_COPYRIGHT "Copyright 2012-2025 Vincent Damewood")
 * "rc.<uint>" (eg "rc.1") release candidates
 * "": official releases
 #]=]
-set(SILIKEGO_CORE_PRERELEASE_SUFFIX "indev" CACHE INTERNAL
-	"Suffix to append to prerelease versions of the Silikego Core library")
+set(SILIKEGO_CORE_PRERELEASE_SUFFIX "indev")
 
 # Follow your package repository's guidelines when setting this value.
 set(SILIKEGO_CORE_PACKAGE_SUFFIX "" CACHE STRING
@@ -50,17 +49,6 @@ set(SILIKEGO_CORE_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/SilikegoCore" 
 		"Locaton to install CMake files (ignored if SILIKEGO_CORE_BUILD_FRAMEWORK is on)"
 )
 
-if(SILIKEGO_CORE_BUILD_FRAMEWORK)
-	set(CMAKEDIR "${SILIKEGO_CORE_INSTALL_FRAMEWORKDIR}/SilikegoCore.framework/Resources")
-	set(RUNTIME_COMPONENT "SilikegoCore")
-	set(DEVELOPMENT_COMPONENT "SilikegoCore")
-else()
-	set(CMAKEDIR "${SILIKEGO_CORE_INSTALL_CMAKEDIR}")
-	set(RUNTIME_COMPONENT "SilikegoCore_Runtime")
-	set(DEVELOPMENT_COMPONENT "SilikegoCore_Development")
-endif()
-
-
 add_library(SilikegoCore)
 add_library(Silikego::SilikegoCore ALIAS SilikegoCore)
 target_sources(SilikegoCore
@@ -68,7 +56,6 @@ target_sources(SilikegoCore
 		FILE_SET HEADERS
 		BASE_DIRS
 			include
-			${CMAKE_CURRENT_BINARY_DIR}/include
 		FILES
 			include/SilikegoCore/Value.h
 			include/SilikegoCore/FunctionCaller.h
@@ -79,7 +66,6 @@ target_sources(SilikegoCore
 			include/SilikegoCore/Lexer.h
 			include/SilikegoCore/InfixParser.h
 			include/SilikegoCore/Version.h
-			${CMAKE_CURRENT_BINARY_DIR}/include/SilikegoCore/Api.h
 	PRIVATE
 		src/Functions.h
 		src/Value.cc
@@ -93,13 +79,9 @@ target_sources(SilikegoCore
 		src/InfixParser.cc
 )
 target_compile_features(SilikegoCore PRIVATE cxx_std_11)
-get_target_property(PUBLIC_HEADERS SilikegoCore HEADER_SET_HEADERS)
 set_target_properties(SilikegoCore PROPERTIES
-	PUBLIC_HEADER             "${PUBLIC_HEADERS}"
 	C_VISIBILITY_PRESET       hidden
 	VISIBILITY_INLINES_HIDDEN On
-	FRAMEWORK                 "${SILIKEGO_CORE_BUILD_FRAMEWORK}"
-	FRAMEWORK_VERSION         ${PROJECT_VERSION}
 	VERSION                   ${PROJECT_VERSION}
 	SOVERSION                 ${PROJECT_VERSION_MAJOR}
 )
@@ -141,6 +123,38 @@ include(GenerateExportHeader)
 generate_export_header(SilikegoCore
 	EXPORT_FILE_NAME include/SilikegoCore/Api.h
 )
+target_sources(SilikegoCore
+	PUBLIC
+		FILE_SET HEADERS
+		BASE_DIRS
+			${CMAKE_CURRENT_BINARY_DIR}/include
+		FILES
+			${CMAKE_CURRENT_BINARY_DIR}/include/SilikegoCore/Api.h
+)
+
+#[[
+Ideally, an if statement here wouldn't be needed, but since
+PUBLIC_HEADER is redundant with FILE_SET HEADERS on non-framework
+builds, it can cause conflicts when installing.
+#]]
+if(SILIKEGO_CORE_BUILD_FRAMEWORK)
+	get_target_property(PUBLIC_HEADERS SilikegoCore HEADER_SET_HEADERS)
+	set_target_properties(SilikegoCore PROPERTIES
+		FRAMEWORK                 On
+		PUBLIC_HEADER             "${PUBLIC_HEADERS}"
+		FRAMEWORK_VERSION         ${PROJECT_VERSION}
+	)
+
+	set(CMAKECONFIG_DIR        "${SILIKEGO_CORE_INSTALL_FRAMEWORKDIR}/SilikegoCore.framework/Resources")
+	set(CMAKECONFIG_COMPONENT  "SilikegoCore_Framework")
+	set(DOC_DIR                "${SILIKEGO_CORE_INSTALL_FRAMEWORKDIR}/SilikegoCore.framework/Resources/Documentation")
+	set(DOC_COMPONENT          "SilikoCore_Framework")
+else()
+	set(CMAKECONFIG_DIR        "${SILIKEGO_CORE_INSTALL_CMAKEDIR}")
+	set(CMAKECONFIG_COMPONENT  "SilikegoCore_Development")
+	set(DOC_DIR                "${CMAKE_INSTALL_DATADIR}/doc/SilikegoCore")
+	set(DOC_COMPONENT          "SilikegoCore_Runtime")
+endif()
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
@@ -153,20 +167,20 @@ install(TARGETS SilikegoCore
 	EXPORT SilikegoCore
 RUNTIME
 	DESTINATION           "${CMAKE_INSTALL_BINDIR}"
-	COMPONENT             "${RUNTIME_COMPONENT}"
+	COMPONENT             SilikegoCore_Runtime
 ARCHIVE
 	DESTINATION           "${CMAKE_INSTALL_LIBDIR}"
-	COMPONENT             "${DEVELOPMENT_COMPONENT}"
+	COMPONENT             SilikegoCore_Development
 LIBRARY
 	DESTINATION           "${CMAKE_INSTALL_LIBDIR}"
-	COMPONENT             "${RUNTIME_COMPONENT}"
-	NAMELINK_COMPONENT    "${DEVELOPMENT_COMPONENT}"
+	COMPONENT             SilikegoCore_Runtime
+	NAMELINK_COMPONENT    SilikegoCore_Development
 FRAMEWORK
 	DESTINATION           "${SILIKEGO_CORE_INSTALL_FRAMEWORKDIR}"
-	COMPONENT             "${DEVELOPMENT_COMPONENT}"
+	COMPONENT             SilikegoCore_Framework
 FILE_SET HEADERS
-	DESTINATION           "${CMAKE_INSTALL_INCLUDEDIR}/SilikegoCore"
-	COMPONENT             "${DEVELOPMENT_COMPONENT}"
+	DESTINATION           "${CMAKE_INSTALL_INCLUDEDIR}"
+	COMPONENT             SilikegoCore_Development
 )
 install(EXPORT SilikegoCore
 	NAMESPACE             Silikego::
@@ -179,13 +193,9 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/SilikegoCoreConfigVersion.cmake"
 	DESTINATION           "${CMAKEDIR}"
 	COMPONENT             "${DEVELOPMENT_COMPONENT}"
 )
-install(FILES
-		"${PROJECT_SOURCE_DIR}/Readme.md"
-	DESTINATION "${CMAKE_INSTALL_DATADIR}/doc/SilikegoCore"
-	COMPONENT "${RUNTIME_COMPONENT}"
-)
 
 install(FILES
+		"${PROJECT_SOURCE_DIR}/Readme.md"
 		"${PROJECT_SOURCE_DIR}/License.txt"
 		"${PROJECT_SOURCE_DIR}/License.Gpl.txt"
 	DESTINATION "${CMAKE_INSTALL_DATADIR}/doc/SilikegoCore"
