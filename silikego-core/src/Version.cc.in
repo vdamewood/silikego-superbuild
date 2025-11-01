@@ -26,5 +26,5 @@ namespace Silikego::Version
     const char         *PackageSuffix     = "@SILIKEGO_CORE_PACKAGE_SUFFIX@";
     const char         *String            = "@SilikegoCore_VERSION@@SILIKEGO_CORE_PRERELEASE_SUFFIX@";
     const char         *StringWithPackage = "@SilikegoCore_VERSION@@SILIKEGO_CORE_PRERELEASE_SUFFIX@@SILIKEGO_CORE_PACKAGE_SUFFIX@";
-    const char         *Copyright         = "@SilikoCore_COPYRIGHT@";
+    const char         *Copyright         = "@SILIKEGO_CORE_COPYRIGHT@";
 };

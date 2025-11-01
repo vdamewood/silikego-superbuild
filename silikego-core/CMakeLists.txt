@@ -80,7 +80,7 @@ target_sources(SilikegoCore
 )
 target_compile_features(SilikegoCore PRIVATE cxx_std_11)
 set_target_properties(SilikegoCore PROPERTIES
-	C_VISIBILITY_PRESET       hidden
+	CXX_VISIBILITY_PRESET     hidden
 	VISIBILITY_INLINES_HIDDEN On
 	VERSION                   ${PROJECT_VERSION}
 	SOVERSION                 ${PROJECT_VERSION_MAJOR}
