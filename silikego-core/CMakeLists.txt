@@ -64,7 +64,7 @@ target_sources(SilikegoCore
 		src/Lexer.cc
 		src/InfixParser.cc
 )
-target_compile_features(SilikegoCore PRIVATE cxx_std_11)
+target_compile_features(SilikegoCore PRIVATE cxx_std_17)
 set_target_properties(SilikegoCore PROPERTIES
 	CXX_VISIBILITY_PRESET     hidden
 	VISIBILITY_INLINES_HIDDEN On
