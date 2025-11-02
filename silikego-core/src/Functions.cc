@@ -284,7 +284,7 @@ namespace Silikego
 
 		result = std::ceil(Args[0].Float());
 
-		if (result <= std::numeric_limits<int>::max() && result >= std::numeric_limits<int>::min())
+		if (result <= std::numeric_limits<long long int>::max() && result >= std::numeric_limits<long long int>::min())
 			return static_cast<long long int>(result);
 		else
 			return result;
@@ -323,7 +323,7 @@ namespace Silikego
 
 		result = std::floor(Args[0].Float());
 
-		if (result <= std::numeric_limits<int>::max() && result >= std::numeric_limits<int>::min())
+		if (result <= std::numeric_limits<long long int>::max() && result >= std::numeric_limits<long long int>::min())
 			return static_cast<long long int>(result);
 		else
 			return result;
