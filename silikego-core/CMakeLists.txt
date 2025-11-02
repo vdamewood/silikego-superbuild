@@ -199,17 +199,10 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/SilikegoCoreConfigVersion.cmake"
 
 install(FILES
 		"${PROJECT_SOURCE_DIR}/Readme.md"
-<<<<<<< Updated upstream
 		"${PROJECT_SOURCE_DIR}/License.md"
 		"${PROJECT_SOURCE_DIR}/License.Gpl.md"
-	DESTINATION "${CMAKE_INSTALL_DATADIR}/doc/SilikegoCore"
-	COMPONENT "${RUNTIME_COMPONENT}"
-=======
-		"${PROJECT_SOURCE_DIR}/License.txt"
-		"${PROJECT_SOURCE_DIR}/License.Gpl.txt"
 	DESTINATION "${DOC_DIR}"
 	COMPONENT "${DOC_COMPONENT}"
->>>>>>> Stashed changes
 )
 
 function(silikego_core_fixup_bundle TGT)
