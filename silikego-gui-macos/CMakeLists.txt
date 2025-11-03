@@ -45,7 +45,20 @@ add_custom_command(OUTPUT MainMenu.nib
 	COMMENT "Compiling ${CMAKE_CURRENT_SOURCE_DIR}/src/MainMenu.xib"
 )
 set_source_files_properties(MainMenu.nib PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-set_source_files_properties(src/silikego-gui-macos.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+add_custom_command(OUTPUT
+	Assets.car
+	SilikegoIcon.icns
+COMMAND ACTOOL
+	--platform macosx
+	--minimum-deployment-target 14.0
+	--output-partial-info-plist /dev/null
+	--compile ${CMAKE_CURRENT_BINARY_DIR}
+	--app-icon SilikegoIcon
+	${CMAKE_CURRENT_SOURCE_DIR}/src/SilikegoIcon.icon
+COMMENT "Compiling application icon"
+)
+set_source_files_properties(Assets.car PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+set_source_files_properties(SilikegoIcon.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
 add_executable(SilikegoGuiMacOS MACOSX_BUNDLE)
 target_sources(SilikegoGuiMacOS
@@ -54,7 +67,8 @@ target_sources(SilikegoGuiMacOS
 		src/Delegate.mm
 		src/Main.mm
 		MainMenu.nib
-		src/silikego-gui-macos.icns
+		Assets.car
+		SilikegoIcon.icns
 )
 set_target_properties(SilikegoGuiMacOS PROPERTIES
 	OUTPUT_NAME                         "Silikego GUI"
@@ -63,7 +77,7 @@ set_target_properties(SilikegoGuiMacOS PROPERTIES
 	MACOSX_BUNDLE_SHORT_VERSION_STRING  ${PROJECT_VERSION}
 	MACOSX_BUNDLE_BUNDLE_VERSION        ${PROJECT_VERSION}
 	MACOSX_BUNDLE_COPYRIGHT             "${SILIKEGO_GUI_BUNDLE_COPYRIGHT}"
-	MACOSX_BUNDLE_ICON_FILE             silikego-gui-macos.icns
+	MACOSX_BUNDLE_ICON_FILE             SilikegoIcon
 	MACOSX_BUNDLE_INFO_PLIST            "${CMAKE_CURRENT_SOURCE_DIR}/src/Info.plist.in"
 )
 target_compile_options(SilikegoGuiMacOS
