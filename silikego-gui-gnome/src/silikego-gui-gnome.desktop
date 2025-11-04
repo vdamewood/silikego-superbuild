@@ -1,9 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Name=Silikego GUI
-Comment=Math parser and calculator
-Type=Application
-Exec=silikego-gui-gnome
-Icon=silikego-gui-gnome
-Terminal=false
-Categories=GTK;Utility

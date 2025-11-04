@@ -1,0 +1,15 @@
+[submodule "silikego"]
+	path = silikego
+	url = https://github.com/vdamewood/silikego
+[submodule "silikego-calc-cli"]
+	path = silikego-calc-cli
+	url = https://github.com/vdamewood/silikego-calc-cli
+[submodule "silikego-calc-cocoa"]
+	path = silikego-calc-cocoa
+	url = https://github.com/vdamewood/silikego-calc-cocoa
+[submodule "silikego-calc-gtkmm"]
+	path = silikego-calc-gtkmm
+	url = https://github.com/vdamewood/silikego-calc-gtkmm
+[submodule "silikego-calc-winapi"]
+	path = silikego-calc-winapi
+	url = https://github.com/vdamewood/silikego-calc-winapi

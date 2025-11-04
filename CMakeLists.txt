@@ -16,24 +16,24 @@
 
 cmake_minimum_required(VERSION 3.18)
 
-option(SILIKEGO_BUILD_CLI  "Build a command-line interface for Silikego" On)
-option(SILIKEGO_BUILD_GUI  "Build a GUI interface for Silikego" On)
+option(SILIKEGO_BUILD_CLI  "Build silikego-calc command-line tool" On)
+option(SILIKEGO_BUILD_GUI  "Build silikego-calc GUI app for the current system" On)
 
 project(Silikego)
 
-add_subdirectory(silikego-core)
+add_subdirectory(silikego)
 
 if(SILIKEGO_BUILD_CLI)
-	add_subdirectory(silikego-cli)
+	add_subdirectory(silikego-calc-cli)
 endif()
 
 if(SILIKEGO_BUILD_GUI)
 	if(APPLE)
-		add_subdirectory(silikego-gui-macos)
+		add_subdirectory(silikego-calc-cocoa)
 	elseif(UNIX)
-		add_subdirectory(silikego-gui-gnome)
+		add_subdirectory(silikego-calc-gtkmm)
 	elseif(WIN32)
-		add_subdirectory(silikego-gui-windows)
+		add_subdirectory(silikego-calc-winapi)
 	else()
 		message(FATAL_ERROR "A GUI program is not available for this system.")
 	endif()
