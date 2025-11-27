@@ -21,6 +21,8 @@ option(SILIKEGO_BUILD_GUI  "Build silikego-calc GUI app for the current system" 
 
 project(Silikego)
 
+include(CTest)
+
 add_subdirectory(silikego)
 
 if(SILIKEGO_BUILD_CLI)
