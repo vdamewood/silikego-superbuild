@@ -14,29 +14,31 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this library. If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.30)
 
-option(SILIKEGO_BUILD_CLI  "Build silikego-calc command-line tool" On)
-option(SILIKEGO_BUILD_GUI  "Build silikego-calc GUI app for the current system" On)
+option(BUILD_CLI    "Build calculator command-line tool"   Off)
+option(BUILD_COCOA  "Build calculator GUI app for macOS"   Off)
+option(BUILD_GTK    "Build calculator GUI app for GNOME"   Off)
+option(BUILD_WINAPI "Build calculator GUI app for Windows" Off)
 
-project(Silikego)
+project(SilikegoSuperBuild)
 
 include(CTest)
 
 add_subdirectory(silikego)
 
-if(SILIKEGO_BUILD_CLI)
+if(BUILD_CLI)
 	add_subdirectory(silikego-calc-cli)
 endif()
 
-if(SILIKEGO_BUILD_GUI)
-	if(APPLE)
-		add_subdirectory(silikego-calc-cocoa)
-	elseif(UNIX)
-		add_subdirectory(silikego-calc-gtkmm)
-	elseif(WIN32)
-		add_subdirectory(silikego-calc-winapi)
-	else()
-		message(FATAL_ERROR "A GUI program is not available for this system.")
-	endif()
+if(BUILD_COCOA)
+	add_subdirectory(silikego-calc-cocoa)
+endif()
+
+if(BUILD_GTK)
+	add_subdirectory(silikego-calc-gtkmm)
+endif()
+
+if(BUILD_WINAPI)
+	add_subdirectory(silikego-calc-winapi)
 endif()
